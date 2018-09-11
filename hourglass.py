@@ -618,9 +618,9 @@ if __name__ == "__main__":
                   desiredTime)
 
     factor = gcd(minutesInFirstHourglass, minutesInSecondHourglass)
-    if (factor > 1 and gcd(factor, desiredTime) == 1):
+    if (factor > 1 and desiredTime % factor > 0):
         print(dedent("""
-        Warning: The hourglasses can only measure multiples of {0}, since that is their common factor.
+        Warning: The hourglasses can only measure multiples of {0} since that is their common factor.
         """.format(factor)))
 
     messages, totalTime = buildTree(Reset(None), state, maxDepth)
