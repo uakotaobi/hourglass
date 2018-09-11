@@ -445,11 +445,13 @@ def buildTree(treeNode, state, maxDepth):
             messages.append(currentNode.advance(tempState))
         # print()
 
-        plural = "minute has" if tempState.getFormalTime() == 1 else "minutes have"
-        finalMessage = "*{0} {1} passed* since the formal keeping of time.  {2} minutes of time have passed in total."
+        formalTimePlural = "minute has" if tempState.getFormalTime() == 1 else "minutes have"
+        totalTimePlural = "minute of time has" if tempState.getTotalTime() == 1 else "minutes of time have"
+        finalMessage = "*{0} {1} passed* since the formal keeping of time.  {2} {3} passed in total."
         messages.append(finalMessage.format(tempState.getFormalTime(),
-                                            plural,
-                                            tempState.getTotalTime()))
+                                            formalTimePlural,
+                                            tempState.getTotalTime(),
+                                            totalTimePlural))
 
         return messages, tempState.getTotalTime()
 
@@ -476,12 +478,9 @@ def buildTree(treeNode, state, maxDepth):
             decisions.append(DrainBoth(treeNode))
 
     # Try to start formal time if that hasn't been done yet.
-    #
-    # Formal time should never begin after a flip (we can do the flip after
-    # starting formal time.)
     if state.getFormalTime() < 0 and not isinstance(treeNode, Flip):
-        # You can only start the formal timer once in a given chain of tree
-        # nodes.
+        # Formal time should never begin after a flip (we can do the flip
+        # after starting formal time.)
         decisions.append(StartFormalTimer(treeNode))
 
     # We don't want two the follow each other in the decision chain.
@@ -620,7 +619,7 @@ if __name__ == "__main__":
     factor = gcd(minutesInFirstHourglass, minutesInSecondHourglass)
     if (factor > 1 and desiredTime % factor > 0):
         print(dedent("""
-        Warning: The hourglasses can only measure multiples of {0} since that is their common factor.
+        Warning: The hourglasses can only measure multiples of {0} since that is their greatest common factor.
         """.format(factor)))
 
     messages, totalTime = buildTree(Reset(None), state, maxDepth)

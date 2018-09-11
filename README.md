@@ -5,13 +5,42 @@
 
 This command-line utility, written in a weekend, solves the (X, Y, Z)
 hourglass problem for arbitrary X, Y, and Z using a brute-force decision tree
-search.  It uses a handful of intelligent pruning operations to reduce the size
-of the tree to a manageable level, and its output is a series of steps.
+search.
 
-The program will try to return the best solution it can find.  Solutions
-without any setup are better than solutions that spend time on setup, and
-solutions that measure the time in fewer steps are better than solutions that
-use more steps.
+The decision tree represents all operations that we can perform on two
+hourglasses:
+
+| Decision type | Description                                 |
+| ------------- | ------------------------------------------- |
+| Reset         | Resets both hourglasses                     |
+| Flip A        | Flips the first hourglass                   |
+| Flip B        | Flips the second hourglass                  |
+| Flip Both     | Flips both hourglasses                      |
+| Drain Either  | Waits for either hourglass to empty         |
+| Drain Both    | Waits for both hourglasses to empty         |
+| Start Timing  | Subsequent drains count toward the solution |
+
+*Reset* is the root node of the decision tree, and is only allowed once.
+Thereafter, most decisions are allowed as children so long as a handful of
+rules are observed:
+1. Flips can only follow draining operations;
+1. Drains cannot follow other draining operations;
+1. You can only start the timer once, and not after a flipping operation;
+1. You can only drain both hourglasses if at least one still has sand in it; and
+1. You can only drain either hourglass if they _both_ still have sand in them.
+
+Each path from the root of this decision tree down to its leaves then
+represents a "simulation" of the hourglass puzzle, with the rules serving to
+prune this tree down to a manageable size.  The program runs each simulation
+until it either _converges_ on a solution or until it _diverges_ by exceeding
+the maximum time or maximum search depth.  Each recursive call returns the
+best solution seen so far, and the final solution is printed out as a series
+of steps.
+
+Solutions without any setup (i.e., solutions that start the formal timer
+immediately) are considered better than solutions that spend time on setup,
+and solutions that measure the desired time in fewer steps are better than
+solutions that use more steps.
 
 ## Usage
 
@@ -50,7 +79,7 @@ optional arguments:
 1. Measuring 27 minutes with a 13-minute hourglass and an 11-minute hourglass:
 
     ``` shell
-    hourglass.py 13 11 27
+    ./hourglass.py 13 11 27
     ```
 
     This solution requires 11 minutes of setup.
@@ -58,7 +87,7 @@ optional arguments:
 2. Increasing the search depth may allow the program to find a better solution:
 
     ``` shell
-    hourglass.py 13 11 27 -d 16
+    ./hourglass.py 13 11 27 -d 16
     ```
 
     This solution requires no setup and takes exactly 27 minutes, making it a
