@@ -26,7 +26,7 @@ positional arguments:
                         The number of minutes in the second hourglass.  This
                         must be a positive integer.
   DESIRED
-                        The number of minutes was want to measure with the two
+                        The number of minutes to measure using the two
                         hourglasses.  This must be a positive integer.
 
 optional arguments:
@@ -40,10 +40,9 @@ optional arguments:
 
                         Keep in mind that increasing the maximum depth of the
                         search space increases this program's running time,
-                        even if the solution found turns out to be trivial.
-                        Remember that starting the formal timer is an extra
-                        step in itself.
-
+                        even if the solution that is found turns out to be
+                        trivial.  Also remember that starting the formal timer
+                        is an extra step in itself.
 ```
 
 ## Examples
