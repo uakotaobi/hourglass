@@ -1,4 +1,4 @@
-# Hourglass Puzle Solver
+# Hourglass Puzzle Solver
 *You have an X-minute hourglass and a Y-minute hourglass.  Use them to measure Z minutes of time.*
 
 ## Synopsis
@@ -62,7 +62,9 @@ optional arguments:
     hourglass.py 13 11 27 -d 16
     ```
 
-    This solution requires no setup and takes exactly 27 minutes, making it a "perfect" solution.
+    This solution requires no setup and takes exactly 27 minutes, making it a
+    "perfect" solution.  Perfect solutions are preferred when they can be
+    found.
 
 ## Caveats
 
@@ -71,3 +73,8 @@ whether no solution exists or whether searching at a greater depth might lead
 to a better solution.  So if you receive a dissatisfying result, increasing
 the search depth *may* yield better results at the cost of CPU usage and
 execution time.
+
+## License
+
+This program is released under the GNU General Public License, version 3 or
+later.
