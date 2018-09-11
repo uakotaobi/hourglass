@@ -1,7 +1,7 @@
 # Hourglass Puzzle Solver
 *You have an X-minute hourglass and a Y-minute hourglass.  Use them to measure Z minutes of time.*
 
-## Synopsis
+## How it works
 
 This command-line utility, written in a weekend, solves the (X, Y, Z)
 hourglass problem for arbitrary X, Y, and Z using a brute-force decision tree
