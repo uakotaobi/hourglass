@@ -411,23 +411,10 @@ def buildTree(treeNode, state, maxDepth):
 
     # Does this node exceed our time bounds?
     if state.getFormalTime() > state.getDesiredTime():
-        # nodeChain = getChain(treeNode)[1:]
-        # tempState = state.clone()
-        # for currentNode in reversed(nodeChain):
-        #     print("{0} -> ".format(currentNode.name()), end='')
-        #     currentNode.advance(tempState)
-        # print("TIME EXCEEDED AT {0} MINUTES".format(state.getFormalTime()))
         return [], 0
 
     # Can we descend no further?
     if treeNode.depth() > maxDepth:
-        # nodeChain = getChain(treeNode)[1:]
-        # tempState = state.clone()
-        # for currentNode in reversed(nodeChain):
-        #     print("{0} -> ".format(currentNode.name()), end='')
-        #     currentNode.advance(tempState)
-        # print("DEPTH {0} EXCEEDED with {0} minutes elapsed".format(maxDepth,
-        #                                                            tempState.getTotalTime()))
         return [], 0
 
     # So we not have enough depth to get to our time goal before we'd run
@@ -441,13 +428,6 @@ def buildTree(treeNode, state, maxDepth):
         # It takes one whole step just to start the formal timer!
         minimumSteps += 1
     if treeNode.depth() + minimumSteps > maxDepth:
-        # nodeChain = getChain(treeNode)[1:]
-        # tempState = state.clone()
-        # for currentNode in reversed(nodeChain):
-        #     print("{0} -> ".format(currentNode.name()), end='')
-        #     currentNode.advance(tempState)
-        # print("NOT ENOUGH DEPTH LEFT to make {0} minute(s) by depth {1}".format(tempState.getDesiredTime(),
-        #                                                                         maxDepth))
         return [], 0
 
     # Is this node a solution?
@@ -462,7 +442,6 @@ def buildTree(treeNode, state, maxDepth):
         tempState = state.clone()
         tempState.reset()  # Need a reset state here, not a copy.
         for currentNode in reversed(nodeChain):
-            # print("{0} => ".format(currentNode.name()), end='')
             messages.append(currentNode.advance(tempState))
         # print()
 
@@ -473,10 +452,6 @@ def buildTree(treeNode, state, maxDepth):
                                             tempState.getTotalTime()))
 
         return messages, tempState.getTotalTime()
-
-    # print("Level {0} ({1}): state={2}.".format(treeNode.depth(),
-    #                                            treeNode.name(),
-    #                                            state))
 
     # Time to try new decisions.
     decisions = []
@@ -541,11 +516,6 @@ def buildTree(treeNode, state, maxDepth):
             solutions.append((messages, totalTime))
 
     if (len(solutions) > 0):
-        # if len(solutions) > 1:
-        #     print("Found multiple solutions:")
-        #     for messages, totalTime in solutions:
-        #         print("* {0} minutes in {1} minutes of elapsed time".format(state.getDesiredTime(), totalTime))
-
         # Return the best solution (that is, the one that has the smallest
         # total time.)
         #
