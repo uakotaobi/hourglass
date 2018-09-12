@@ -455,26 +455,27 @@ def buildTree(treeNode, state, maxDepth):
 
         return messages, tempState.getTotalTime()
 
-    # Time to try new decisions.
+    # Time to try new decisions from the current treeNode.
     decisions = []
     if state.getRemainingTime("A") > 0 and state.getRemainingTime("B") > 0:
-        # Draining either is only possible if we haven't already drained
-        # both.
+        # Draining either is only possible both hourglasses still have sand in
+        # them--if either hourglass were empty, DrainEither would be an
+        # immediate no-op and a waste of a node.
         decisions.append(DrainEither(treeNode))
 
     # This correctly adds "drain both" as a general operation to the decision
-    # tree, but it just massively increases the search space without a lot of
-    # seeming benefit.
+    # tree, but it does massively increase the search space.
     #
+    # The pruning tests here help to some extent, but it's still perfectly
+    # possible for this function to find a solution without using DrainBoith
+    # at all.  (It'll be a longer solution in many cases, though!)
     if state.getRemainingTime("A") > 0 or state.getRemainingTime("B") > 0:
         # Draining both hourglasses is possible only if at least one of them
-        # is non-empty AND we're not already following a DrainEither (why
-        # would we drainEither() and then drainAll() when we could just
-        # drainAll() in the first place?)
+        # is non-empty.
         if not isinstance(treeNode, DrainEither):
-            # You can't follow a DrainEither with a DrainBoth--it would be
-            # better just to have the DrainBoth by itself in those
-            # circumstances.
+            # Following a DrainEither with a DrainBoth makes no sense.  Since
+            # the end result is the same--both hourglasses are completely
+            # emptied--why not just do the DrainBoth in the first place?
             decisions.append(DrainBoth(treeNode))
 
     # Try to start formal time if that hasn't been done yet.
@@ -484,18 +485,20 @@ def buildTree(treeNode, state, maxDepth):
         decisions.append(StartFormalTimer(treeNode))
 
     # We don't want two the follow each other in the decision chain.
+    #
     # - FLIP A -> FLIP B is the same as FLIP BOTH.
     # - FLIP B -> FLIP A is the same as FLIP BOTH.
     # - After doing FLIP BOTH, it makes no sense to immediately do another
     #   flip.
+    #
     # Also, don't flip right after the reset--that's just silly.
     if not isinstance(treeNode, Flip) and not isinstance(treeNode, Reset):
         # Always try flipping both hourglasses first.
         decisions.append(FlipBoth(treeNode))
 
-        # Drain Both should not be followed by Flip A or Flip B -- both
-        # hourglasses are empty, so both should be flipped if we're going to
-        # flip at all.
+        # We don't want a Flip A or Flip B to follow a DrainBoth -- since both
+        # hourglasses are already empty, they both need to be flipped together
+        # if we're going to flip at all.
         mostRecentDrain = None
         currentNode = treeNode
         while not currentNode.isRoot():
@@ -517,8 +520,6 @@ def buildTree(treeNode, state, maxDepth):
     if (len(solutions) > 0):
         # Return the best solution (that is, the one that has the smallest
         # total time.)
-        #
-        # TODO: Find a more Pythonic way to do this.
         bestSolution = None
         bestSolutionTime = 0
         for messages, totalTime in solutions:
@@ -560,11 +561,11 @@ if __name__ == "__main__":
         try:
             n = int(string)
             if n <= 0:
-                message = "{0} is not a positive integer"
+                message = "{0} is not a positive integer."
                 raise argparse.ArgumentTypeError(message.format(n))
             return n
         except ValueError as e:
-            message = "\"{0}\" is not an integer"
+            message = "\"{0}\" is not an integer."
             raise argparse.ArgumentTypeError(message.format(string)) from e
 
     parser.add_argument("minutesInFirstHourglass",
