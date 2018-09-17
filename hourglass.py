@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from abc import ABCMeta, abstractmethod
+import sys
 import argparse
 from math import ceil, gcd
 from textwrap import dedent
@@ -625,6 +626,7 @@ if __name__ == "__main__":
     messages, totalTime = buildTree(Reset(None), state, maxDepth)
     if len(messages) == 0:
         print("No solution found at depth {0}.  Try a higher depth?".format(maxDepth))
+        sys.exit(1)
     else:
         print()
         perfect = "Found a perfect" if totalTime == state.getDesiredTime() else "Best"
