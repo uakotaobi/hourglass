@@ -82,12 +82,12 @@ optional arguments:
     ./hourglass.py 13 11 27
     ```
 
-    This solution requires 11 minutes of setup.
+    This solution requires 13 minutes of setup.
 
 2. Increasing the search depth may allow the program to find a better solution:
 
     ``` shell
-    ./hourglass.py 13 11 27 -d 16
+    ./hourglass.py 13 11 27 -d 18
     ```
 
     This solution requires no setup and takes exactly 27 minutes, making it a
